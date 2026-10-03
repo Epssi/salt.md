@@ -209,6 +209,7 @@ What is **not** in the document:
 | Properties of a database row | Nothing; only the row's title and body |
 | Comments, notes, version history | Nothing. They are never part of a share |
 | A table of contents block | Nothing; it is built by the app |
+| A sub-pages block | Nothing. A visitor was given this page and nothing under it, so the list is empty rather than naming pages they were never shown |
 | A table's header row | Ordinary cells. The document has no header row, so the first row is not set apart |
 
 The file limitation is the one that catches people out. An image you dropped

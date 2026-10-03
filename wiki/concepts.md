@@ -295,9 +295,9 @@ This is not the same thing as a **note** — see [Agent](#agent) below and
 
 The body of a page is a list of blocks: paragraph, heading, bulleted list,
 numbered list, check list, toggle list, quote, code, table, divider, image,
-video, audio, file. salt.md adds six of its own, offered in the `/` menu as
+video, audio, file. salt.md adds seven of its own, offered in the `/` menu as
 **Columns**, **Diagram**, **Callout**, **Bookmark / Embed**,
-**Table of contents** and **Embed a collection**. Type `/` to insert one; drag a
+**Table of contents**, **Sub-pages** and **Embed a collection**. Type `/` to insert one; drag a
 block by its handle to move it.
 
 Two inline things are not blocks but behave like vocabulary: typing `@` or `[[`

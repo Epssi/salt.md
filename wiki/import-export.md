@@ -491,6 +491,7 @@ a backup-shaped export. See [the API](api.md).
 | table | a Markdown table; `\|` in a cell is escaped | `<table>` |
 | columns | flattened, side by side | side-by-side `<div>`s |
 | table of contents | nothing — it is built while reading | nothing |
+| sub-pages | one `- [title](/p/<id>)` item per sub-page you may see | the same, as links to `/p/<id>` |
 | embedded database | `[Datenbank](/p/<id>)` | a link to the database page |
 | page link | `[label](/p/<id>)` | a link to `/p/<id>` |
 | underline | `<u>text</u>` — Markdown has none | `<u>` |

@@ -316,9 +316,9 @@ the sidebar under Documents; click it to read it.
 2. The page opens immediately with an empty title, showing *Untitled* as a
    placeholder. Type a title, then press Enter or click into the body.
 3. Type `/` anywhere in the body for the block menu: headings, lists, quotes,
-   code, tables, images — plus six blocks that are salt.md's own, **Columns**,
-   **Diagram**, **Callout**, **Bookmark / Embed**, **Embed a collection** and
-   **Table of contents**. [Editor blocks](editor-blocks.md) covers them.
+   code, tables, images — plus seven blocks that are salt.md's own, **Columns**,
+   **Diagram**, **Callout**, **Bookmark / Embed**, **Embed a collection**,
+   **Table of contents** and **Sub-pages**. [Editor blocks](editor-blocks.md) covers them.
 4. Type `@`, or `[[`, and pick a page to make a real link to it — both open the
    same picker, and both can create the page you are looking for if it does not
    exist yet. The other page then lists yours without anybody maintaining

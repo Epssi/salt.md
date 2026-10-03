@@ -275,6 +275,7 @@ second later.
 | `POST /api/pages/{id}/restore` | bring it back out of the trash |
 | `POST /api/pages/{id}/duplicate` | deep-copy the page and everything under it |
 | `GET /api/pages/{id}/backlinks` | the pages that mention this one |
+| `GET /api/pages/{id}/children` | the direct, live sub-pages of one page, as metadata, in sidebar order — what the editor's Sub-pages block shows |
 | `GET /api/pages/{id}/preview` | the page as a plain, script-free HTML document — what the trash's preview shows |
 | `GET /api/graph` | every link between pages you can read, as source/target pairs |
 | `GET /api/favorites` · `POST`/`DELETE /api/favorites/{id}` | your own favourites |
@@ -291,6 +292,12 @@ them, and they belong in the row endpoint below. Rows that carry sub-pages of
 their own are the exception and do appear, because otherwise their children
 would have no parent in the list. Trashed pages are included, marked
 `"trashed": true`.
+
+It also leaves out **templates and everything under them**, which is why a
+template's contents are not in this list. `GET /api/pages/{id}/children` is the
+way to ask: it answers `404` for a page you cannot read, and leaves out trashed
+pages, templates and sub-pages that are private to somebody else — it never
+hints that one exists. Direct children only; walk it for a deeper tree.
 
 `POST /api/pages` takes `parentId`, `title`, `type`, `props` and `workspaceId`.
 `PATCH` accepts `title`, `icon`, `cover`, `content`, `props`, `propsPatch`,

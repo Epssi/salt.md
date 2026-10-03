@@ -34,7 +34,7 @@ mode because it is the one that cannot destroy what is already on the page, not
 because it spares open editors. See [Agents](agents.md).
 
 **The editor's own menus are English**, always, including on an instance running
-in another language. The six blocks salt.md adds itself are translated; the
+in another language. The seven blocks salt.md adds itself are translated; the
 menus that come with the editor — the slash menu's built-in entries, the block
 menu, the formatting toolbar — are not.
 
@@ -65,6 +65,7 @@ other text, the new block is inserted **after** it.
 | **Callout** | Basic blocks | — |
 | **Embed a collection** | Basic blocks | — |
 | **Table of contents** | Basic blocks | — |
+| **Sub-pages** | Basic blocks | — |
 | **Table** | Advanced | — |
 | **Diagram** | Advanced | — |
 | **Image**, **Video**, **Audio**, **File** | Media | — |
@@ -78,7 +79,7 @@ whether or not the menu is open — **except `Mod-Alt-c`**, which is printed
 beside **Code Block** but is bound to no key at all. One shortcut goes the other
 way and is advertised nowhere: `Mod-Alt-q` turns the current block into a quote.
 
-The six salt.md blocks carry a one-line description in the menu:
+The seven salt.md blocks carry a one-line description in the menu:
 
 - **Columns** — *Two blocks side by side*
 - **Diagram** — *A flow chart written as text*
@@ -86,6 +87,7 @@ The six salt.md blocks carry a one-line description in the menu:
 - **Bookmark / Embed** — *A link card, or a YouTube/Vimeo player*
 - **Embed a collection** — *Show an existing collection inside the document*
 - **Table of contents** — *Auto-generated list of every heading*
+- **Sub-pages** — *Automatic list of the sub-pages of this page*
 
 **Columns** is a block that holds nothing itself. Inserting it gives you two
 empty blocks side by side; the small **2 / 3** control at its right edge, which
@@ -114,7 +116,7 @@ source instead, which is worth more than a gap. Open the page once and the
 picture is there from then on.
 
 Their aliases are deliberately bilingual, so `datenbank`, `tabelle`, `hinweis`,
-`inhalt`, `spalten`, `diagramm`, `flussdiagramm` and `warnung` find them as well as
+`inhalt`, `unterseiten`, `spalten`, `diagramm`, `flussdiagramm` and `warnung` find them as well as
 the English words.
 
 ### Markdown shortcuts
@@ -328,7 +330,29 @@ It reaches nested headings too: a heading inside a toggle, or inside a column,
 is listed like any other.
 
 Because it is generated on the spot, it is the one block that exports as
-nothing at all.
+nothing at all, whoever asks.
+
+### Sub-pages
+
+A list of the pages directly under this one, headed **Sub-pages**: the icon and
+title of each, in the order of the sidebar. Clicking one opens it. With none it
+says *No sub-pages.*
+
+**The block stores nothing.** It asks the page it sits in, every time, so it is
+never stale: a page created, renamed, moved or sent to the trash under this one
+shows up without a reload. For the same reason a **copy of the page lists the
+copy's own sub-pages**, not the original's, and so does a page made from a
+[template](templates.md) — the block can be part of the template.
+
+It lists **direct children only**, not their children in turn. And it lists what
+*you* may see: a sub-page that is private to somebody else is not shown to you,
+and nothing says it exists. See [Permissions](permissions.md).
+
+Trashed pages are left out. A template is not a sub-page of anything, so one
+filed under this page is not listed either.
+
+On a page you can only read, the block works the same; it is a list of links, not
+an editor.
 
 ### Bookmark / Embed
 
@@ -475,6 +499,7 @@ included; for a whole tree see [Import and export](import-export.md).
 | Bookmark | a link to the address |
 | Embedded collection | a link to the collection page, labelled `Datenbank` |
 | Table of contents | nothing |
+| Sub-pages | one `- [title](/p/<id>)` item per sub-page you may see; nothing when you are not signed in |
 | Columns | the contents, flattened into one sequence |
 | Page link | `[label](/p/<id>)` |
 | **bold**, *italic*, ~~strike~~, `code` | the Markdown for each |
@@ -511,7 +536,8 @@ discover:
 - **Headings 4, 5 and 6 come back as heading 3.** The importer clamps them.
 - **A divider comes back as a paragraph containing `---`.**
 - **Callouts, bookmarks and embedded collections come back as what they
-  exported as** — a quote and two links.
+  exported as** — a quote and two links. A Sub-pages block comes back as the
+  plain list of links it exported as, which no longer follows the tree.
 - **The title heading stays in the body.** The first heading of an imported file
   becomes the page's title *and* remains the first block. Delete it if you do
   not want it twice.
