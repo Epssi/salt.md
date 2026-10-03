@@ -351,6 +351,12 @@ and nothing says it exists. See [Permissions](permissions.md).
 Trashed pages are left out. A template is not a sub-page of anything, so one
 filed under this page is not listed either.
 
+**Inside a template the list is read once, when you open it.** The page list the
+editor keeps live leaves templates out, so the block asks the server as the
+template opens and nothing tells it about a change afterwards. Add or rename a
+page under a template while looking at it and the block stays as it was until
+you open the template again. Everywhere else the list follows the tree live.
+
 On a page you can only read, the block works the same; it is a list of links, not
 an editor.
 
