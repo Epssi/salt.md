@@ -3446,6 +3446,51 @@ body.is-col-resizing {
   background: var(--hover);
 }
 
+/* Sub-pages: same box as the table of contents, entries are links to pages. */
+.bn-subpages {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--sidebar-bg);
+}
+
+.bn-subpages-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.bn-subpages-empty {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.bn-subpages-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--fg);
+  font-size: 13.5px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bn-subpages-entry:hover {
+  background: var(--hover);
+}
+
 .bn-bookmark-input {
   width: 100%;
 }
