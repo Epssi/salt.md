@@ -34,7 +34,7 @@ mode because it is the one that cannot destroy what is already on the page, not
 because it spares open editors. See [Agents](agents.md).
 
 **The editor's own menus are English**, always, including on an instance running
-in another language. The four blocks salt.md adds itself are translated; the
+in another language. The six blocks salt.md adds itself are translated; the
 menus that come with the editor — the slash menu's built-in entries, the block
 menu, the formatting toolbar — are not.
 

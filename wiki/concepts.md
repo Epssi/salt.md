@@ -295,8 +295,8 @@ This is not the same thing as a **note** — see [Agent](#agent) below and
 
 The body of a page is a list of blocks: paragraph, heading, bulleted list,
 numbered list, check list, toggle list, quote, code, table, divider, image,
-video, audio, file — and blocks can be laid out in columns. salt.md adds four
-of its own, offered in the `/` menu as **Callout**, **Bookmark / Embed**,
+video, audio, file. salt.md adds six of its own, offered in the `/` menu as
+**Columns**, **Diagram**, **Callout**, **Bookmark / Embed**,
 **Table of contents** and **Embed a collection**. Type `/` to insert one; drag a
 block by its handle to move it.
 
