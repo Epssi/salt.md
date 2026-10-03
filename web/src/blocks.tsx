@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { createReactBlockSpec } from '@blocknote/react';
-import { Table2 } from 'lucide-react';
+import { FileText, Table2 } from 'lucide-react';
+import { api } from './api';
 import { useBlockCtx } from './blockContext';
+import type { PageMeta } from './types';
 import { MERMAID_REV, renderMermaid } from './mermaidLoader';
 import { PageIcon } from './pageIcon';
 import CollectionView from './components/CollectionView';
@@ -131,6 +133,59 @@ export const tocSpec = createReactBlockSpec(
               }}
             >
               {e.text}
+            </button>
+          ))}
+        </div>
+      );
+    },
+  },
+);
+
+// ---- Sub-pages ----
+// The direct children of the page this block sits in, one link each. Nothing is
+// stored on the block: it asks the page it is part of, so a copied page — or a
+// template used to make one — lists its OWN children, not the original's.
+//
+// The list comes from the server rather than from the page list in the context:
+// that one leaves out a template and everything under it, and the rows of a
+// collection. It is asked again whenever the page list changes, which the
+// server's live events already trigger for every rename, move or new page.
+
+export const subpagesSpec = createReactBlockSpec(
+  {
+    type: 'subpages',
+    propSchema: {},
+    content: 'none',
+  } as const,
+  {
+    render: () => {
+      const { pageId, pagesById, onNavigate } = useBlockCtx();
+      const [children, setChildren] = useState<PageMeta[] | null>(null);
+      useEffect(() => {
+        if (!pageId) return;
+        let alive = true;
+        api
+          .listChildren(pageId)
+          .then((c) => alive && setChildren(c))
+          .catch(() => {
+            /* keep what is shown — a failed refresh must not blank the list */
+          });
+        return () => {
+          alive = false;
+        };
+      }, [pageId, pagesById]);
+      return (
+        <div className="bn-subpages" contentEditable={false}>
+          <div className="bn-subpages-title">{t('Sub-pages')}</div>
+          {children?.length === 0 && <div className="bn-subpages-empty">{t('No sub-pages.')}</div>}
+          {(children ?? []).map((c) => (
+            <button key={c.id} type="button" className="bn-subpages-entry" onClick={() => onNavigate(c.id)}>
+              <PageIcon
+                icon={c.icon}
+                size={15}
+                fallback={c.type === 'collection' ? <Table2 size={15} /> : <FileText size={15} />}
+              />{' '}
+              {c.title || t('Untitled')}
             </button>
           ))}
         </div>
