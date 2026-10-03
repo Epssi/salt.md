@@ -234,6 +234,7 @@ func New(dataDir string, dist fs.FS) (*Server, error) {
 	m.HandleFunc("GET /api/pages", s.auth(s.handleListPages))
 	m.HandleFunc("POST /api/pages", s.auth(s.handleCreatePage))
 	m.HandleFunc("GET /api/pages/{id}", s.auth(s.handleGetPage))
+	m.HandleFunc("GET /api/pages/{id}/children", s.auth(s.handleListChildren))
 	m.HandleFunc("PATCH /api/pages/{id}", s.auth(s.handleUpdatePage))
 	m.HandleFunc("DELETE /api/pages/{id}", s.auth(s.handleDeletePage))
 	m.HandleFunc("POST /api/pages/{id}/restore", s.auth(s.handleRestorePage))

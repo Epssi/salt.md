@@ -215,6 +215,41 @@ func (s *Server) handleGetPage(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, p)
 }
 
+// handleListChildren lists the direct sub-pages of one page, for the editor's
+// "Sub-pages" block. It exists because GET /api/pages cannot answer the
+// question: that list leaves out a template and everything under it, and the
+// rows of a collection, so a block fed from it would show a template — or a
+// copy-in-progress of one — as having no children at all.
+//
+// Same rules as the rest: 404 when the parent cannot be read, and children
+// the caller may not see (a private page owned by somebody else) are dropped
+// rather than counted, so the answer never hints at their existence.
+func (s *Server) handleListChildren(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	if !s.canReadReq(r, id) {
+		httpError(w, 404, "page not found")
+		return
+	}
+	rows, err := s.db.Query(`SELECT `+pageMetaCols+` FROM pages p
+		WHERE parent_id = ? AND trashed_at IS NULL AND is_template = 0
+		ORDER BY position, created_at`, id)
+	if err != nil {
+		httpError(w, 500, err.Error())
+		return
+	}
+	defer rows.Close()
+	list := []pageMeta{}
+	for rows.Next() {
+		m, err := scanMeta(rows)
+		if err != nil {
+			httpError(w, 500, err.Error())
+			return
+		}
+		list = append(list, m)
+	}
+	writeJSON(w, s.filterReadable(requestUser(r).ID, list))
+}
+
 func (s *Server) handleCreatePage(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		ParentID    *string         `json:"parentId"`

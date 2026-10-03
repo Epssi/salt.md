@@ -307,6 +307,7 @@ export const api = {
       body: JSON.stringify({ parentId, title, type, props, workspaceId }),
     }),
   getPage: (id: string) => req<Page>(`/api/pages/${id}`),
+  listChildren: (id: string) => req<PageMeta[]>(`/api/pages/${id}/children`),
   updatePage: (
     id: string,
     patch: Partial<{
