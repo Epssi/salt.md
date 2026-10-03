@@ -146,10 +146,21 @@ export const tocSpec = createReactBlockSpec(
 // stored on the block: it asks the page it is part of, so a copied page — or a
 // template used to make one — lists its OWN children, not the original's.
 //
-// The list comes from the server rather than from the page list in the context:
-// that one leaves out a template and everything under it, and the rows of a
-// collection. It is asked again whenever the page list changes, which the
-// server's live events already trigger for every rename, move or new page.
+// Where the children come from:
+//
+//   • The page is in the page list: they are in it too, already filtered to what
+//     this reader may see and kept current by the server's live events. No
+//     request at all, so an unrelated change elsewhere costs nothing here.
+//   • The page is NOT in the list — a template, which the list leaves out along
+//     with everything under it: ask the server once when the page is opened.
+//     Nothing announces a change inside a template, and it is not edited while
+//     being looked at, so opening it again is the refresh.
+
+function ownChildren(pagesById: Map<string, PageMeta>, pageId: string): PageMeta[] {
+  return [...pagesById.values()]
+    .filter((p) => p.parentId === pageId && !p.trashed && !p.isTemplate)
+    .sort((a, b) => a.position - b.position);
+}
 
 export const subpagesSpec = createReactBlockSpec(
   {
@@ -160,20 +171,22 @@ export const subpagesSpec = createReactBlockSpec(
   {
     render: () => {
       const { pageId, pagesById, onNavigate } = useBlockCtx();
-      const [children, setChildren] = useState<PageMeta[] | null>(null);
+      const inList = pagesById.has(pageId);
+      const [fetched, setFetched] = useState<PageMeta[] | null>(null);
       useEffect(() => {
-        if (!pageId) return;
+        if (!pageId || inList) return;
         let alive = true;
         api
           .listChildren(pageId)
-          .then((c) => alive && setChildren(c))
+          .then((c) => alive && setFetched(c))
           .catch(() => {
-            /* keep what is shown — a failed refresh must not blank the list */
+            /* leave the list as it is — nothing to show beats a wrong list */
           });
         return () => {
           alive = false;
         };
-      }, [pageId, pagesById]);
+      }, [pageId, inList]);
+      const children = inList ? ownChildren(pagesById, pageId) : fetched;
       return (
         <div className="bn-subpages" contentEditable={false}>
           <div className="bn-subpages-title">{t('Sub-pages')}</div>
