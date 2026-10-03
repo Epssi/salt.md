@@ -1482,6 +1482,14 @@ function BlockContent({
         icon: <span>📑</span>,
         onItemClick: () => insertOrUpdateBlockForSlashMenu(editor, { type: 'toc' } as never),
       },
+      {
+        title: t('Sub-pages'),
+        subtext: t('Automatic list of the sub-pages of this page'),
+        aliases: ['subpages', 'sub-pages', 'children', 'unterseiten', 'kinder'], // i18n-ok: search aliases, deliberately multilingual so a German user can type it
+        group: 'Basic blocks',
+        icon: <span>📂</span>,
+        onItemClick: () => insertOrUpdateBlockForSlashMenu(editor, { type: 'subpages' } as never),
+      },
     ];
     return filterSuggestionItems(
       [

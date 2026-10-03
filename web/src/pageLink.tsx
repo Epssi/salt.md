@@ -1,6 +1,6 @@
 import { BlockNoteSchema, defaultBlockSpecs, defaultInlineContentSpecs } from '@blocknote/core';
 import { createReactInlineContentSpec } from '@blocknote/react';
-import { bookmarkSpec, databaseSpec, calloutSpec, tocSpec, columnsSpec, mermaidSpec } from './blocks';
+import { bookmarkSpec, databaseSpec, calloutSpec, tocSpec, subpagesSpec, columnsSpec, mermaidSpec } from './blocks';
 
 // A "pageLink" is an inline mention of another salt.md page. It stores the target
 // page id and a display label. Clicking it dispatches a navigation event that
@@ -34,7 +34,7 @@ export const pageLinkSpec = createReactInlineContentSpec(
 );
 
 // Schema = the default blocks plus our own (callout, table of contents,
-// bookmark/embed, embedded database, columns) and the pageLink inline content.
+// bookmark/embed, embedded database, sub-pages, columns) and the pageLink inline content.
 // createReactBlockSpec returns a factory in 0.51 — call it.
 //
 // Columns used to come from @blocknote/xl-multi-column, which is BlockNote's
@@ -47,6 +47,7 @@ export const saltSchema =
       ...defaultBlockSpecs,
       callout: calloutSpec(),
       toc: tocSpec(),
+      subpages: subpagesSpec(),
       bookmark: bookmarkSpec(),
       database: databaseSpec(),
       columns: columnsSpec(),
