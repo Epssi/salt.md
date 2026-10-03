@@ -195,6 +195,9 @@ func renderBlockHTML(b *strings.Builder, blk mdBlock) {
 		}
 	case "toc":
 		// Generated client-side; skip in export.
+	case "subpages":
+		// As in the Markdown export: a signed-in export has had the block
+		// replaced by links already; anything else prints nothing, on purpose.
 	// columnList is the OLD shape, from the paid package that used to provide
 	// columns: an outer block whose children are column blocks, each with its
 	// own children. Nothing writes it any more, and it stays because a page

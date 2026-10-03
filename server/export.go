@@ -2,6 +2,7 @@ package server
 
 import (
 	"archive/zip"
+	"bytes"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -168,6 +169,9 @@ func renderBlocks(b *strings.Builder, blocks []mdBlock, depth int) {
 			}
 		case "toc":
 			// Generated client-side from headings; nothing meaningful to export.
+		case "subpages":
+			// Reaching here means nobody asked for the list: withSubpageLinks
+			// has already turned the block into links for a signed-in reader.
 		case "columnList", "column":
 			// Layout containers: flatten children at the SAME depth (an indent
 			// would misread as nesting). Children handled below via the generic
@@ -277,6 +281,58 @@ func walkText(v any, b *strings.Builder) {
 }
 
 // ---- Export handlers ----
+
+// withSubpageLinks swaps every "subpages" block in the page's body for one
+// bullet per sub-page the READER may see, each a page link — so the Markdown
+// and HTML writers, which already know page links, need nothing new.
+//
+// The block stores no list, only its place in the tree, so an export that never
+// goes through here prints nothing for it. That is deliberate and it is the
+// rule for every caller that has no signed-in reader: the public view, which
+// must not list titles of pages the visitor was never given, the zip, whose
+// folders already show the tree, and the agent tools. Only an export asked for
+// by a signed-in person lists anything, and then only what that person sees.
+func (s *Server) withSubpageLinks(userID string, p *page) {
+	if !bytes.Contains(p.Content, []byte(`"subpages"`)) {
+		return
+	}
+	var blocks []mdBlock
+	if json.Unmarshal(p.Content, &blocks) != nil {
+		return
+	}
+	var kids []pageMeta
+	var loaded bool
+	var expand func(in []mdBlock) []mdBlock
+	expand = func(in []mdBlock) []mdBlock {
+		out := make([]mdBlock, 0, len(in))
+		for _, blk := range in {
+			blk.Children = expand(blk.Children)
+			if blk.Type != "subpages" {
+				out = append(out, blk)
+				continue
+			}
+			if !loaded {
+				loaded = true
+				kids, _ = s.readableChildren(userID, p.ID)
+			}
+			for _, k := range kids {
+				label := k.Title
+				if label == "" {
+					label = "Untitled"
+				}
+				link, _ := json.Marshal([]mdInline{{
+					Type:  "pageLink",
+					Props: map[string]any{"pageId": k.ID, "label": label},
+				}})
+				out = append(out, mdBlock{Type: "bulletListItem", Content: link})
+			}
+		}
+		return out
+	}
+	if raw, err := json.Marshal(expand(blocks)); err == nil {
+		p.Content = raw
+	}
+}
 
 func pageMarkdown(p *page) string {
 	title := p.Title
@@ -410,6 +466,9 @@ func (s *Server) handleExportPage(w http.ResponseWriter, r *http.Request) {
 	// HTML export (?format=html) is offered for document pages — real structure
 	// for opening in a browser or importing elsewhere. Databases stay Markdown
 	// (a table is the faithful representation of their rows).
+	if p.Type != "collection" {
+		s.withSubpageLinks(requestUser(r).ID, p)
+	}
 	if r.URL.Query().Get("format") == "html" && p.Type != "collection" {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		// print=1 opens inline in a new tab (a beautiful print/PDF view that works
