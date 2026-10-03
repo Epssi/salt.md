@@ -8,6 +8,8 @@ import type { PageMeta } from './types';
 // documents open at once.
 
 export interface BlockCtx {
+  /** The page the editor is showing — what a "Sub-pages" block lists the children of. */
+  pageId: string;
   pagesById: Map<string, PageMeta>;
   tagColors: Record<string, string>;
   onNavigate: (id: string | null) => void;
@@ -15,6 +17,7 @@ export interface BlockCtx {
 }
 
 const empty: BlockCtx = {
+  pageId: '',
   pagesById: new Map(),
   tagColors: {},
   onNavigate: () => {},

@@ -1731,7 +1731,7 @@ function BlockContent({
       <div className="editor-inner" onClickCapture={onFileClick}>
         {/* The database block renders inside the editor and would otherwise
             not reach the page list, the tag colours or navigation. */}
-        <BlockContext.Provider value={{ pagesById, tagColors, onNavigate, onPagesChanged }}>
+        <BlockContext.Provider value={{ pageId: provider.pageId, pagesById, tagColors, onNavigate, onPagesChanged }}>
         <BlockNoteView editor={editor} theme={theme} editable={canEdit} slashMenu={false}>
           <SuggestionMenuController triggerCharacter="/" getItems={getSlashItems} />
           <SuggestionMenuController
